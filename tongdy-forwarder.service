@@ -21,8 +21,8 @@ StartLimitIntervalSec=0
 Type=simple
 User=pi
 Group=pi
-WorkingDirectory=/home/pi/tongdy_mqtt_teat/pi_send_to_backend
-ExecStart=/home/pi/tongdy_mqtt_teat/pi_send_to_backend/.venv/bin/python /home/pi/tongdy_mqtt_teat/pi_send_to_backend/app.py
+WorkingDirectory=/home/pi/pi_send_to_backend
+ExecStart=/home/pi/pi_send_to_backend/.venv/bin/python /home/pi/pi_send_to_backend/app.py
 Environment=PYTHONUNBUFFERED=1
 Restart=always
 RestartSec=5
