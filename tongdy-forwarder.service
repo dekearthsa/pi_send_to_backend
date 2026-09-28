@@ -1,0 +1,34 @@
+# systemd unit for app.py (Tongdy PGX MQTT -> API Gateway forwarder)
+#
+# Easiest: on the Pi, from this folder run   sudo ./install_service.sh
+# (it fills in User/Group and the /home/pi/... paths below for you)
+#
+# Manual install: edit User/Group and the /home/pi/... paths, then
+#   sudo cp tongdy-forwarder.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now tongdy-forwarder
+#
+# Logs: journalctl -u tongdy-forwarder -f
+
+[Unit]
+Description=Tongdy PGX MQTT -> API Gateway forwarder (kun_kran)
+Wants=network-online.target mosquitto.service
+After=network-online.target mosquitto.service
+# keep retrying forever instead of giving up after a few quick failures
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/tongdy_mqtt_teat/pi_send_to_backend
+ExecStart=/home/pi/tongdy_mqtt_teat/pi_send_to_backend/.venv/bin/python /home/pi/tongdy_mqtt_teat/pi_send_to_backend/app.py
+Environment=PYTHONUNBUFFERED=1
+Restart=always
+RestartSec=5
+# app.py handles SIGTERM: it stops MQTT and keeps anything unsent in failed_records.db
+TimeoutStopSec=45
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
